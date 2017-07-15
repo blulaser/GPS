@@ -85,7 +85,7 @@ public class Service2 extends Service {
             locationB.setLongitude(gps2.lon);
 
             distance = locationA.distanceTo(locationB);
-                if(distance<300) {
+                if(distance<100) {
                     Toast.makeText(getApplicationContext(), distance + "m," + gps2.lat + "," + gps2.lon + " "+lat1+","+lon1, Toast.LENGTH_SHORT).show();
                 }
                 else
