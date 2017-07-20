@@ -1,6 +1,8 @@
 package com.example.administrator.gps;
 
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -55,7 +58,6 @@ public class Service2 extends Service {
 
 
 
-
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -65,7 +67,16 @@ public class Service2 extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private class  Counter implements Runnable { private int count; private Handler handler = new Handler(); @Override public void run() { for (count = 0; count < 5; count++) { // STOP 버튼을 눌렀다면 종료한다.
+    private class  Counter implements Runnable {
+
+        private int count;
+        private Handler handler = new Handler();
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext()).setSmallIcon(R.drawable.ic_launcher).setContentTitle("aa").setContentText("bb");
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        @Override public void run() { for (count = 0; count < 5; count++) { // STOP 버튼을 눌렀다면 종료한다.
+
 
         if (isStop) { break; } /** * Thread 안에서는 UI와 관련된 Toast를 쓸 수 없습니다. * 따라서, Handler를 통해 이용할 수 있도록 만들어줍니다. */
         handler.post(new Runnable() { @Override public void run() {
@@ -95,13 +106,15 @@ public class Service2 extends Service {
                 }
                 if(count==4)
                 {
-                    //TODO 저장할건지 호출하는거 넣는위치
+                    mNotificationManager.notify(0,mBuilder.build());
+
+                   //TODO 저장할건지 호출하는거 넣는위치
                 }
 
             // Log로 Count 찍어보기
             Log.d("COUNT,", count + ""); } });
         // Sleep을 통해 1초씩 쉬도록 한다.
-        try { Thread.sleep(1000*30); } catch (InterruptedException e) { e.printStackTrace(); } } handler.post(new Runnable() { @Override public void run() { Toast.makeText(getApplicationContext(), "서비스가 종료되었습니다.", Toast.LENGTH_SHORT).show(); } }); } }
+        try { Thread.sleep(1000*5); } catch (InterruptedException e) { e.printStackTrace(); } } handler.post(new Runnable() { @Override public void run() { Toast.makeText(getApplicationContext(), "서비스가 종료되었습니다.", Toast.LENGTH_SHORT).show(); } }); } }
 
 
 

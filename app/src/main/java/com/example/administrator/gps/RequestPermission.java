@@ -30,7 +30,8 @@ public class RequestPermission extends AppCompatActivity {
 
 
 
-        if (ContextCompat.checkSelfPermission(A, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+    if (ContextCompat.checkSelfPermission(A, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             // 이 권한을 필요한 이유를 설명해야하는가?
             if (ActivityCompat.shouldShowRequestPermissionRationale(A, Manifest.permission.ACCESS_COARSE_LOCATION)) {
