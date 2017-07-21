@@ -114,8 +114,12 @@ public class GPS extends Service implements LocationListener {
                     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
 
+
                         Toast.makeText(mContext.getApplicationContext(),"위치권한이 필요합니다",Toast.LENGTH_SHORT).show();
-                        
+                        Location location = new Location("Don't have permission");
+
+
+                        return location;
 
                     }
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
