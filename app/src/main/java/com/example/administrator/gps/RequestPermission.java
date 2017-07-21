@@ -21,8 +21,10 @@ public class RequestPermission extends AppCompatActivity {
     int permissionCheck = ContextCompat.checkSelfPermission(A, Manifest.permission.ACCESS_COARSE_LOCATION);
 
         if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(A,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
 
-        // 권한 없음
     } else {
         // 권한 있음
     }
@@ -55,7 +57,9 @@ public class RequestPermission extends AppCompatActivity {
 
         if (permissionCheck2 == PackageManager.PERMISSION_DENIED) {
 
-            // 권한 없음
+            ActivityCompat.requestPermissions(A,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
         } else {
             // 권한 있음
         }

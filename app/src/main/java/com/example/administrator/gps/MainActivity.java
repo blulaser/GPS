@@ -96,16 +96,19 @@ public class MainActivity extends Activity {
 
                     Toast.makeText(getApplicationContext(),"당신의 위치 - \n위도: " + latitude + "\n경도: " + longitude, Toast.LENGTH_LONG).show();
 
+
+                    Intent intent = new Intent(
+                            getApplicationContext(),//현재제어권자
+                            Service2.class); // 이동할 컴포넌트
+                    startService(intent); // 서비스 시작
+
                 } else {
                     // GPS 를 사용할수 없으므로
                     gps.showSettingsAlert();
                 }
 
 
-                Intent intent = new Intent(
-                        getApplicationContext(),//현재제어권자
-                        Service2.class); // 이동할 컴포넌트
-                startService(intent); // 서비스 시작
+
 
             }
 

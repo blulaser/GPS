@@ -104,7 +104,7 @@ public class GPS extends Service implements LocationListener {
 
             } else {
 
-                this.isGetLocation = true;
+
 
                 // 네트워크 정보로 부터 위치값 가져오기
 
@@ -122,6 +122,8 @@ public class GPS extends Service implements LocationListener {
                         return location;
 
                     }
+
+                    this.isGetLocation = true;
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
 
 
