@@ -14,6 +14,13 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
 
 
 public class Service2 extends Service {
@@ -72,8 +79,14 @@ public class Service2 extends Service {
         private int count;
         private Handler handler = new Handler();
 
+        //노티피케이션 설정
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext()).setSmallIcon(R.drawable.ic_launcher).setContentTitle("aa").setContentText("bb");
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        byte [] buffer = new byte[6];
+        byte [] buffer2 = new byte[2];
+        byte [] buffer3 = new byte[2];
+
+
 
         @Override public void run() { for (count = 0; count < 5; count++) { // STOP 버튼을 눌렀다면 종료한다.
 
@@ -97,16 +110,75 @@ public class Service2 extends Service {
 
             distance = locationA.distanceTo(locationB);
                 if(distance<100) {
-                    Toast.makeText(getApplicationContext(), distance + "m," + gps2.lat + "," + gps2.lon + " "+lat1+","+lon1, Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(getApplicationContext(), distance + "m," + gps2.lat + "," + gps2.lon + " "+lat1+","+lon1, Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(), "#"+distance + "m," + gps2.lat + "," + gps2.lon + " "+lat1+","+lon1, Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(), "#"+distance + "m," + gps2.lat + "," + gps2.lon + " "+lat1+","+lon1, Toast.LENGTH_SHORT).show();
                    isStop=true;
                 }
-                if(count==4)
+                if(count==1)
                 {
-                    mNotificationManager.notify(0,mBuilder.build());
+                    InputStream is = getApplicationContext().getResources().openRawResource(R.raw.schedule);
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    String dr;
+                    int dr_i=0;
+
+                    try{
+                        int a =is.read(buffer);
+                        String ymd = new String(buffer,0,a);
+                        int ymd_i = Integer.parseInt(ymd);
+                        is.read();
+
+                        int b = is.read(buffer2);
+                        String hour = new String(buffer2,0,b);
+                        int hour_i = Integer.parseInt(hour);
+                        int c = is.read(buffer3);
+                        String minute = new String(buffer3,0,c);
+                        int minute_i = Integer.parseInt(minute);
+                        is.read();
+
+                        int d;
+                        try{
+                            d = is.read();
+                        while (d != -1) {
+                            byteArrayOutputStream.write(d);
+                            d = is.read();
+                        }
+                            dr = new String(byteArrayOutputStream.toByteArray(),"MS949");
+                            dr_i = Integer.parseInt(dr);
+                            is.close();
+                        }catch(IOException e)
+                            {
+                                e.printStackTrace();
+                            }
+
+                        Toast.makeText(getApplicationContext(),ymd_i+" "+hour_i+" "+dr_i,Toast.LENGTH_SHORT).show();
+                        long now =System.currentTimeMillis();
+                        Date date =new Date(now);
+                        SimpleDateFormat ymd_now = new SimpleDateFormat("yyMMdd");
+                        String ymd_s =ymd_now.format(date);
+                        SimpleDateFormat hour_now = new SimpleDateFormat("HH");
+                        String hour_s = hour_now.format(date);
+                        SimpleDateFormat minute_now = new SimpleDateFormat("mm");
+                        String minute_s = minute_now.format(date);
+
+
+                        if(ymd_i==Integer.parseInt(ymd_s) && Math.abs(hour_i*60+minute_i-Integer.parseInt(hour_s)*60-Integer.parseInt(minute_s))<=dr_i)
+                        {
+                            Toast.makeText(getApplicationContext(),"기존에 있는 스케쥴의 날짜 시간 스케쥴이 지속되는시간은(분)"+ymd_i+" "+hour_i+" "+minute_i+" "+dr_i+"이고 현재날짜와 시간은 "+ymd_s+" "+hour_s+" "+minute_s+"이므로 스케쥴이 겹칩니다",Toast.LENGTH_SHORT).show();
+
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(),"기존에 있는 스케쥴의 날짜 시간 스케쥴이 지속되는시간은(분)"+ymd_i+" "+hour_i+" "+minute_i+" "+dr_i+"이고 현재날짜와 시간은 "+ymd_s+" "+hour_s+" "+minute_s+"이므로 스케쥴이 안겹칩니다",Toast.LENGTH_SHORT).show();
+                            mNotificationManager.notify(0,mBuilder.build());
+                        }
+                    }catch (Exception e){e.printStackTrace();}
+
+
+
+
 
                    //TODO 저장할건지 호출하는거 넣는위치
                 }
@@ -114,7 +186,7 @@ public class Service2 extends Service {
             // Log로 Count 찍어보기
             Log.d("COUNT,", count + ""); } });
         // Sleep을 통해 1초씩 쉬도록 한다.
-        try { Thread.sleep(1000*5); } catch (InterruptedException e) { e.printStackTrace(); } } handler.post(new Runnable() { @Override public void run() { Toast.makeText(getApplicationContext(), "서비스가 종료되었습니다.", Toast.LENGTH_SHORT).show(); } }); } }
+        try { Thread.sleep(1000*10); } catch (InterruptedException e) { e.printStackTrace(); } } handler.post(new Runnable() { @Override public void run() { Toast.makeText(getApplicationContext(), "서비스가 종료되었습니다.", Toast.LENGTH_SHORT).show(); } }); } }
 
 
 
