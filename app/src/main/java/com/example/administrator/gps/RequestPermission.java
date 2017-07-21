@@ -1,6 +1,7 @@
 package com.example.administrator.gps;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -14,7 +15,7 @@ public class RequestPermission extends AppCompatActivity {
 
 
 
-    void ReqPer(MainActivity A){
+    void ReqPer(Activity A){
 
 
     int permissionCheck = ContextCompat.checkSelfPermission(A, Manifest.permission.ACCESS_COARSE_LOCATION);

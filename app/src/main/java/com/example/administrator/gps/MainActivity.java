@@ -50,14 +50,10 @@ public class MainActivity extends Activity {
         RequestPermission R1 = new RequestPermission();
         R1.ReqPer(this);
 
-        if ( ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
 
-            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  }, 0 );
-        }
 
 
         btnShowLocation = (Button) findViewById(R.id.btn_start);
-        serviceon = (Button)findViewById(R.id.Serviceon);
         serviceon = (Button)findViewById(R.id.Serviceon);
         txtLat = (TextView) findViewById(R.id.Latitude);
         txtLon = (TextView) findViewById(R.id.Longitude);
@@ -67,7 +63,12 @@ public class MainActivity extends Activity {
 
 
 
-
+        serviceon.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View arg0){
+                gps = new GPS(MainActivity.this);
+                gps.getLocation();
+            }
+        });
 
 
 
@@ -81,6 +82,7 @@ public class MainActivity extends Activity {
             public void onClick(View arg0) {
 
                 gps = new GPS(MainActivity.this);
+                gps.getLocation();
 
 
 
@@ -109,6 +111,10 @@ public class MainActivity extends Activity {
 
 
         });
+
+
+
+
 
 
     }

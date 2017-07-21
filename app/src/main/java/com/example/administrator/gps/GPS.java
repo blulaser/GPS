@@ -3,6 +3,7 @@ package com.example.administrator.gps;
 import android.Manifest;
 import android.app.AlertDialog;
 
+import android.app.PendingIntent;
 import android.app.Service;
 
 import android.content.Context;
@@ -25,10 +26,10 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-
 
 
 public class GPS extends Service implements LocationListener {
@@ -72,7 +73,8 @@ public class GPS extends Service implements LocationListener {
     protected LocationManager locationManager;
 
 
-    public GPS(Context context) {this.mContext = context;
+    public GPS(Context context) {
+        this.mContext = context;
         getLocation();
     }
 
@@ -107,9 +109,15 @@ public class GPS extends Service implements LocationListener {
                 // 네트워크 정보로 부터 위치값 가져오기
 
 
-
                 if (isNetworkEnabled) {
 
+                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+
+                        Toast.makeText(mContext.getApplicationContext(),"위치권한이 필요합니다",Toast.LENGTH_SHORT).show();
+                        
+
+                    }
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
 
 
