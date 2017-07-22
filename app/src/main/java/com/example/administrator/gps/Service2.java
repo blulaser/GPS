@@ -3,6 +3,7 @@ package com.example.administrator.gps;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -80,7 +81,20 @@ public class Service2 extends Service {
         private Handler handler = new Handler();
 
         //노티피케이션 설정
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext()).setSmallIcon(R.drawable.ic_launcher).setContentTitle("aa").setContentText("bb");
+
+        Intent ii2= new Intent(getApplicationContext(),saveSchedule.class);
+
+        PendingIntent pi = PendingIntent.getService(getApplicationContext(),0,ii2,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle("aa")
+                        .setContentText("bb")
+                        .addAction(R.drawable.ic_launcher,"ss",pi)
+                        .setContentIntent(pi);
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         byte [] buffer = new byte[6];
         byte [] buffer2 = new byte[2];
@@ -101,6 +115,11 @@ public class Service2 extends Service {
                     lon1 = gps2.lon;
                     locationA.setLatitude(lat1);
                     locationA.setLongitude(lon1);
+                    try {
+                        pi.send();
+                    } catch (PendingIntent.CanceledException e) {
+                        e.printStackTrace();
+                    }
                 }
 
 
@@ -172,7 +191,9 @@ public class Service2 extends Service {
                         else
                         {
                             Toast.makeText(getApplicationContext(),"기존에 있는 스케쥴의 날짜 시간 스케쥴이 지속되는시간은(분)"+ymd_i+" "+hour_i+" "+minute_i+" "+dr_i+"이고 현재날짜와 시간은 "+ymd_s+" "+hour_s+" "+minute_s+"이므로 스케쥴이 안겹칩니다",Toast.LENGTH_SHORT).show();
+
                             mNotificationManager.notify(0,mBuilder.build());
+
                         }
                     }catch (Exception e){e.printStackTrace();}
 
@@ -186,7 +207,7 @@ public class Service2 extends Service {
             // Log로 Count 찍어보기
             Log.d("COUNT,", count + ""); } });
         // Sleep을 통해 1초씩 쉬도록 한다.
-        try { Thread.sleep(1000*10); } catch (InterruptedException e) { e.printStackTrace(); } } handler.post(new Runnable() { @Override public void run() { Toast.makeText(getApplicationContext(), "서비스가 종료되었습니다.", Toast.LENGTH_SHORT).show(); } }); } }
+        try { Thread.sleep(1000*5); } catch (InterruptedException e) { e.printStackTrace(); } } handler.post(new Runnable() { @Override public void run() { Toast.makeText(getApplicationContext(), "서비스가 종료되었습니다.", Toast.LENGTH_SHORT).show(); } }); } }
 
 
 
