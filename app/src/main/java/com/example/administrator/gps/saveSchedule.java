@@ -46,7 +46,7 @@ public class saveSchedule extends Service {
             }
 
 
-            onDestroy();
+
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -55,6 +55,7 @@ public class saveSchedule extends Service {
 
 
         Log.d("test", "save서비스의 onDestroy");
+        Toast.makeText(getApplicationContext(),"save destroy",Toast.LENGTH_LONG).show();
         super.onDestroy();
 
     }
