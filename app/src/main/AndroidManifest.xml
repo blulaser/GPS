@@ -3,13 +3,10 @@
     package="com.example.administrator.gps">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -18,31 +15,26 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-
         </activity>
 
-      <service android:name=".Service2">
-
+        <service android:name=".Service2">
             <intent-filter>
+                <action android:name="com.example.administrator.gps" />
 
-                <action android:name="com.example.administrator.gps"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </service>
+        <service android:name=".addSchedule">
+            <intent-filter>
+                <action android:name="com.example.administrator.addSchedule" />
 
-
-
-
-
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

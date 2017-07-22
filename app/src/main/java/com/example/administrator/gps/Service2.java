@@ -3,14 +3,18 @@ package com.example.administrator.gps;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.RemoteInput;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+
+
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -80,8 +84,50 @@ public class Service2 extends Service {
         private Handler handler = new Handler();
 
         //노티피케이션 설정
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext()).setSmallIcon(R.drawable.ic_launcher).setContentTitle("aa").setContentText("bb");
+        Intent mIntent = new Intent("com.example.administrator.gps.addSchedule");
+        PendingIntent mConfirmPendingIntent = PendingIntent.getService(getApplicationContext(),0, mIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        private static final String KEY_TEXT_REPLY = "key_text_reply";
+        String replyLabel = "abc";
+        RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY)
+                .setLabel(replyLabel)
+                .build();
+        Notification.Action action =
+                new Notification.Action.Builder(R.drawable.ic_launcher,
+                        replyLabel, mConfirmPendingIntent)
+                        .addRemoteInput(remoteInput)
+                        .build();
+
+
+
+        Notification mBuilder =
+                new Notification.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle("aa").setContentText("bb")
+                        .setStyle(new Notification.BigTextStyle().bigText("dd"))
+                        .addAction(action)
+                        .build();
+
+
+
+
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        Bundle remoteInput2 = RemoteInput.getResultsFromIntent(mIntent);
+
+        private CharSequence getMessageText(Intent intent) {
+            Bundle remoteInput2 = RemoteInput.getResultsFromIntent(intent);
+            if (remoteInput2 != null) {
+                return remoteInput2.getCharSequence(KEY_TEXT_REPLY);
+            }
+            return null;
+        }
+
+
+
+
+
+
+
         byte [] buffer = new byte[6];
         byte [] buffer2 = new byte[2];
         byte [] buffer3 = new byte[2];
@@ -167,12 +213,14 @@ public class Service2 extends Service {
                         if(ymd_i==Integer.parseInt(ymd_s) && Math.abs(hour_i*60+minute_i-Integer.parseInt(hour_s)*60-Integer.parseInt(minute_s))<=dr_i)
                         {
                             Toast.makeText(getApplicationContext(),"기존에 있는 스케쥴의 날짜 시간 스케쥴이 지속되는시간은(분)"+ymd_i+" "+hour_i+" "+minute_i+" "+dr_i+"이고 현재날짜와 시간은 "+ymd_s+" "+hour_s+" "+minute_s+"이므로 스케쥴이 겹칩니다",Toast.LENGTH_SHORT).show();
+                            mNotificationManager.notify(0,mBuilder);
+
 
                         }
                         else
                         {
                             Toast.makeText(getApplicationContext(),"기존에 있는 스케쥴의 날짜 시간 스케쥴이 지속되는시간은(분)"+ymd_i+" "+hour_i+" "+minute_i+" "+dr_i+"이고 현재날짜와 시간은 "+ymd_s+" "+hour_s+" "+minute_s+"이므로 스케쥴이 안겹칩니다",Toast.LENGTH_SHORT).show();
-                            mNotificationManager.notify(0,mBuilder.build());
+                            mNotificationManager.notify(0,mBuilder);
                         }
                     }catch (Exception e){e.printStackTrace();}
 
